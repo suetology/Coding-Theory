@@ -9,17 +9,17 @@ public class Matrix<T>
     
     public int Width { get; }
     
-    private readonly DivisionRingElement[,] _data;
+    private readonly T[,] _data;
 
     public Matrix(int height, int width)
     {
         Height = height;
         Width = width;
 
-        _data = new DivisionRingElement[Height, Width];
+        _data = new T[Height, Width];
     }
 
-    public DivisionRingElement this[int row, int column]
+    public T this[int row, int column]
     {
         get
         {
