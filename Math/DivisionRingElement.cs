@@ -1,8 +1,9 @@
 namespace Math;
 
-public class DivisionRingElement : 
-    IAddable<DivisionRingElement>,
-    IMultipliable<DivisionRingElement> 
+public struct DivisionRingElement :
+    IAddable<DivisionRingElement>, 
+    IMultipliable<DivisionRingElement>,
+    ISubtractable<DivisionRingElement>
 {
     public int Modulus { get; }
 
@@ -28,9 +29,7 @@ public class DivisionRingElement :
             throw new ArgumentException("Trying to add elements from different division rings");
         }
 
-        var newValue = (e1.Value + e2.Value) % e1.Modulus;
-
-        return new DivisionRingElement(e1.Modulus, newValue);
+        return new DivisionRingElement(e1.Modulus, e1.Value + e2.Value);
     }
 
     public static DivisionRingElement operator *(DivisionRingElement e1, DivisionRingElement e2)
@@ -40,9 +39,17 @@ public class DivisionRingElement :
             throw new ArgumentException("Trying to multiply elements from different division rings");
         }
 
-        var newValue = e1.Value * e2.Value % e1.Modulus;
+        return new DivisionRingElement(e1.Modulus, e1.Value * e2.Value);
+    }
 
-        return new DivisionRingElement(e1.Modulus, newValue);
+    public static DivisionRingElement operator -(DivisionRingElement e1, DivisionRingElement e2)
+    {
+        if (e1.Modulus != e2.Modulus)
+        {
+            throw new ArgumentException("Trying to subtract elements from different division rings");
+        }
+
+        return new DivisionRingElement(e1.Modulus, e1.Value - e2.Value);
     }
 
     public override string ToString()
