@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Code.Extensions;
+using Code;
 using Math;
 
 var configuration = new ConfigurationBuilder()
@@ -8,9 +9,12 @@ var configuration = new ConfigurationBuilder()
     .Build();
 
 var errorProbability = configuration.GetErrorProbability();
-var order = configuration.GetDivisionRingOrder();
+var message = configuration.GetMessage();
 var code = configuration.GetCodeConfiguration();
 
-Console.WriteLine(code.Length);
-Console.WriteLine(code.Dimension);
-Console.WriteLine(code.Matrix);
+Console.WriteLine(code.GeneratorMatrix);
+
+var syst = code.GeneratorMatrix.CreateSystematicFormMatrix();
+
+Console.WriteLine("");
+Console.WriteLine(syst);

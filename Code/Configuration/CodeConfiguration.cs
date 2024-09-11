@@ -1,3 +1,5 @@
+namespace Code.Configuration;
+
 using Math;
 
 public class CodeConfiguration
@@ -6,5 +8,5 @@ public class CodeConfiguration
 
     public int Dimension { get; set; }
 
-    public Matrix<DivisionRingElement>? Matrix { get; set; }
+    public Matrix<Bit>? GeneratorMatrix { get; set; }
 }

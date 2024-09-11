@@ -1,13 +1,26 @@
 namespace Code.Extensions;
 
+using Code.Configuration;
 using Math;
 using Microsoft.Extensions.Configuration;
 
 public static class ConfigurationExtensions
 {
-    public static int GetDivisionRingOrder(this IConfiguration configuration)
+    public static string GetMessage(this IConfiguration configuration)
     {
-        return configuration.GetSection("q").Get<int>();
+        var message = configuration.GetSection("message").Get<string>();
+
+        if (message == null)
+        {
+            throw new Exception("Message is not specified in configuration");
+        }
+
+        if (!message.IsBitString())
+        {
+            throw new Exception("Message is not a string of bits");
+        }
+
+        return message;
     }
 
     public static float GetErrorProbability(this IConfiguration configuration)
@@ -28,19 +41,17 @@ public static class ConfigurationExtensions
 
         if (matrixSection != null)
         {
-            var q = configuration.GetDivisionRingOrder();
-
-            var matrix = new Matrix<DivisionRingElement>(code.Dimension, code.Length);
+            var matrix = new Matrix<Bit>(code.Dimension, code.Length);
 
             for (var y = 0; y < matrixSection.Count; y++)
             {
                 for (var x = 0; x < matrixSection[y].Count; x++)
                 {
-                    matrix[y, x] = new DivisionRingElement(q, matrixSection[y][x]);
+                    matrix[y, x] = new Bit(matrixSection[y][x]);
                 }
             }
 
-            code.Matrix = matrix;
+            code.GeneratorMatrix = matrix;
         }
 
         return code;
