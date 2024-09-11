@@ -50,13 +50,13 @@ public class Matrix<T>
         return transpose;
     }
 
-    public Matrix<T> Extract(int rowStart, int rowCount, int columnStart, int columnCount)
+    public Matrix<T> Extract(int rowStart, int columnStart, int height, int width)
     {
-        var extracted = new Matrix<T>(rowCount, columnCount);
+        var extracted = new Matrix<T>(height, width);
 
-        for (var y = rowStart; y < rowStart + rowCount; y++)
+        for (var y = 0; y < height; y++)
         {
-            for (var x = columnStart; x < columnStart + columnCount; x++)
+            for (var x = 0; x < width; x++)
             {
                 extracted[y, x] = this[rowStart + y, columnStart + x];
             }

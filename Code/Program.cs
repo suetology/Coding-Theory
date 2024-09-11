@@ -14,7 +14,4 @@ var code = configuration.GetCodeConfiguration();
 
 Console.WriteLine(code.GeneratorMatrix);
 
-var syst = code.GeneratorMatrix.CreateSystematicFormMatrix();
-
-Console.WriteLine("");
-Console.WriteLine(syst);
+code.GeneratorMatrix.CreateParityCheckMatrix();

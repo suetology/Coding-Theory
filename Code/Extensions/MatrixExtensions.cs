@@ -14,49 +14,58 @@ public static class MatrixExtensions
         return true;
     }
 
-    public static Matrix<Bit> CreateSystematicFormMatrix(this Matrix<Bit> matrix)
+    public static void RowReduce(this Matrix<Bit> matrix)
     {
-        var systematicFormMatrix = new Matrix<Bit>(matrix);
-
-        for (var i = 0; i < systematicFormMatrix.Height; i++)
+        for (var i = 0; i < matrix.Height; i++)
         {
-            if (systematicFormMatrix[i, i] == Bit.Zero())
+            if (matrix[i, i] == Bit.Zero())
             {
-                for (var j = i + 1; j < systematicFormMatrix.Height; j++)
+                for (var j = i + 1; j < matrix.Height; j++)
                 {
-                    if (systematicFormMatrix[j, i] == Bit.One())
+                    if (matrix[j, i] == Bit.One())
                     {
-                        systematicFormMatrix.SwapRows(i, j);
+                        matrix.SwapRows(i, j);
                         
                         break;
                     }
                 }
             }
 
-            if (systematicFormMatrix[i, i] == Bit.Zero())
+            if (matrix[i, i] == Bit.Zero())
             {
                 continue;
             }
 
-            for (var j = 0; j < systematicFormMatrix.Height; j++)
+            for (var j = 0; j < matrix.Height; j++)
             {
-                if (i != j && systematicFormMatrix[j, i] == Bit.One())
+                if (i != j && matrix[j, i] == Bit.One())
                 {
-                    for (var k = 0; k < systematicFormMatrix.Width; k++)
+                    for (var k = 0; k < matrix.Width; k++)
                     {
-                        systematicFormMatrix[j, k] = systematicFormMatrix[j, k] + systematicFormMatrix[i, k];
+                        matrix[j, k] = matrix[j, k] + matrix[i, k];
                     }
                 }
             }
         }
-
-        return systematicFormMatrix;
     }
 
     public static Matrix<Bit> CreateParityCheckMatrix(this Matrix<Bit> matrix)
     {
-        var systematicFormMatrix = new Matrix<Bit>(matrix);
+        var identityMatrix = Matrix<Bit>.CreateIdentityMatrix(matrix.Height);
+        var zeroMatrix = new Matrix<Bit>(matrix.Height, matrix.Width - matrix.Height);
 
-        return systematicFormMatrix;
+        var combinedMatrix = Matrix<Bit>.CombineRows(matrix, Matrix<Bit>.CombineRows(identityMatrix, zeroMatrix));
+
+        combinedMatrix.RowReduce();
+
+        var parityCheckMatrix = combinedMatrix.Extract(0, matrix.Width, matrix.Height, matrix.Width);
+
+        Console.WriteLine(combinedMatrix);
+
+        var mul = parityCheckMatrix * matrix.Transpose();
+
+        Console.WriteLine(mul);
+
+        return matrix;
     }
 }
