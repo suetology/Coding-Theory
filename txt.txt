@@ -1,0 +1,51 @@
+Order functions {
+    Employee {
+        can create an order,
+        can modify an open order,
+        can cancel an open order,
+        can apply a discount to an order/product in order,
+    },
+    Customer {
+        can pay the order by cash/gift card/card (payment can be partial),
+        can add a tip,
+        can get the final receipt,
+        can refund a closed order
+    }
+}
+
+Services functions {
+    Employee {
+        can make a reservation for a customer,
+        can cancel a reservation,
+        can modify a reservation
+    }
+}
+
+Inventory functions {
+    Employee {
+        can create product,
+        can modify product,
+        can delete product,
+    }
+}
+
+User management functions {
+    Employee {
+        can create a business,
+        can create a user,
+        can modify a user,
+        can delete a user
+    }
+}
+
+Roles: 
+> Customer
+> Employee
+> Business owner
+> SuperAdmin
+
+1. Kaip taxus naudojam? Kiekvienam produktui ar kategorijai?
+2. Wtf is this: 
+    Tax Management (create/edit/delete). Change of the tax item (like VAT) should not affect any historical records
+    Change of the service charge item should not affect any historical records
+3. Customer turi buti registruojamas? Ar kaip guest user?

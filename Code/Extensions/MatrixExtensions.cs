@@ -14,9 +14,26 @@ public static class MatrixExtensions
         return true;
     }
 
+    public static IList<Matrix<Bit>> GetCodeWords(this Matrix<Bit> matrix)
+    {
+        var accumulator = (IList<Matrix<Bit>> codeWords, int position) => 
+        {
+            if (position >= matrix.Height)
+            {
+                return;
+            }
+
+            
+        };
+
+        return accumulator.
+    }
+
     public static void RowReduce(this Matrix<Bit> matrix)
     {
-        for (var i = 0; i < matrix.Height; i++)
+        /*for (var i = 0; i < matrix.Height; i++)
+
+
         {
             if (matrix[i, i] == Bit.Zero())
             {
@@ -46,6 +63,75 @@ public static class MatrixExtensions
                     }
                 }
             }
+        }*/
+
+        int i = 0, j = 0; // row and column indices
+
+        // Main loop for row reduction
+        while (i < matrix.Height && j < matrix.Width)
+        {
+            // Step 1: Find a pivot in column j
+            int pivotRow = i;
+            while (pivotRow < matrix.Height && matrix[pivotRow, j] == Bit.Zero())
+            {
+                pivotRow++;
+            }
+
+            // If no pivot found in column j, move to the next column
+            if (pivotRow == matrix.Height)
+            {
+                j++;
+                continue;
+            }
+
+            // Step 2: Swap the current row i with the pivot row
+            if (pivotRow != i)
+            {
+                matrix.SwapRows(i, pivotRow);
+                //SwapRows(matrix, i, pivotRow, matrix.Width);
+            }
+
+            // Step 3: Eliminate below the pivot (make all entries below the pivot in column j zero)
+            for (int r = i + 1; r < matrix.Height; r++)
+            {
+                if (matrix[r, j] == Bit.One())
+                {
+                    for (var x = 0; x < matrix.Width; x++)
+                    {
+                        matrix[r, x] += matrix[i, x];
+                    }
+                    
+                    //AddRows(matrix, i, r, matrix.Width); // Add row i to row r (XOR operation)
+                }
+            }
+
+            // Move to the next row and column
+            i++;
+            j++;
+        }
+
+        // Optional: Reduce above the pivots (for RREF)
+        for (int row = matrix.Height - 1; row >= 0; row--)
+        {
+            for (int col = 0; col < matrix.Width; col++)
+            {
+                if (matrix[row, col] == Bit.One())
+                {
+                    for (int r = row - 1; r >= 0; r--)
+                    {
+                        if (matrix[r, col] == Bit.One())
+                        {
+                            for (var x = 0; x < matrix.Width; x++)
+                            {
+                                matrix[r, x] += matrix[row, x];
+                            }
+
+                            //AddRows(matrix, row, r, matrix.Width);
+                        }
+                    }
+                    break;
+                }
+            }
         }
     }
 
@@ -58,9 +144,9 @@ public static class MatrixExtensions
 
         combinedMatrix.RowReduce();
 
-        var parityCheckMatrix = combinedMatrix.Extract(0, matrix.Width, matrix.Height, matrix.Width);
-
         Console.WriteLine(combinedMatrix);
+
+        var parityCheckMatrix = combinedMatrix.Extract(0, matrix.Width, matrix.Height, matrix.Width);
 
         var mul = parityCheckMatrix * matrix.Transpose();
 

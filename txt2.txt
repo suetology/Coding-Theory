@@ -1,0 +1,39 @@
+Order functionality
+
+> Employee can create an order
+> Employee can modify an open order (change items)
+> Employee cannot modify a closed/paid order
+> Employee can cancel an open (unpaid/not closed order)
+> Customer can pay the order by cash, gift card and credit/debit card
+? BEWARE: In Lab 2 every team will be asked to implement card payment integration with Stripe or Elavon payment provider, so you might want to do extra research on how card payment flow works
+> Each order should allow split checks (multiple payments)
+> Customer can add a tip to an order
+> Employee can apply a discount to an order
+> When order is closed the customer can get the final receipt with all costs, taxes, discounts and service charges calculated and presented
+? Different order items can have different taxes applied to them (food vs alcohol as an example)
+> Paid/closed orders are to be preserved indefinitely
+> Closed orders can be refunded and marked as such
+
+Services
+
+> Employee can make a reservation for a customer
+> Each reservation has time when booked, appointment time, employee, customer, service
+> Employee can cancel or modify an appointment upon customer request
+? BONUS - send SMS notification when appointment is created (I recommend AWS SMS functionality for that
+
+System management functionality
+
+> BONUS: Inventory management (should be integrated with order management and have quantities reduced when bought)
+? Tax Management (create/edit/delete)
+? Change of the tax item (like VAT) should not affect any historical records
+? Change of the service charge item should not affect any historical records
+> Product/Menu Item Management (create/edit/delete)
+? Each product can have variation (e.g. coffee with milk, decaf, vegan milk)
+? Each Service has an employee associated with it
+? Discounts can be applied to a specific product or the whole order
+> Discounts can be time-limited
+> User Management (can create/delete/edit users)
+> Only business owner can edit employees/users of their business
+> SuperAdmin (IT Support) can edit anyone
+> All actions should be performed only by logged-in and authorised users
+> Each merchant/business has an owner user, address, contact info (phone, email), name,

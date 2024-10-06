@@ -1,5 +1,6 @@
 namespace Code;
 
+using Code.Extensions;
 using Math;
 
 public class Coder
@@ -8,10 +9,10 @@ public class Coder
 
     private readonly Matrix<Bit> _parityCheckMatrix;
 
-    public Coder(Matrix<Bit> generatorMatrix, Matrix<Bit> parityCheckMatrix)
+    public Coder(Matrix<Bit> generatorMatrix)
     {
         _generatorMatrix = generatorMatrix;
-        _parityCheckMatrix = parityCheckMatrix;
+        _parityCheckMatrix = _generatorMatrix.CreateParityCheckMatrix();
     }
 
     public BitMessage Encode(BitMessage message)
