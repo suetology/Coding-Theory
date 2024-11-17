@@ -8,19 +8,19 @@
     "net8.0": []
   },
   "packageFolders": {
-    "/home/vitas/.nuget/packages/": {}
+    "C:\\Users\\user\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "/home/vitas/Desktop/Coding-Theory/Math/Math.csproj",
+      "projectUniqueName": "C:\\Users\\user\\Desktop\\Stuffchik\\Coding-Theory\\Math\\Math.csproj",
       "projectName": "Math",
-      "projectPath": "/home/vitas/Desktop/Coding-Theory/Math/Math.csproj",
-      "packagesPath": "/home/vitas/.nuget/packages/",
-      "outputPath": "/home/vitas/Desktop/Coding-Theory/Math/obj/",
+      "projectPath": "C:\\Users\\user\\Desktop\\Stuffchik\\Coding-Theory\\Math\\Math.csproj",
+      "packagesPath": "C:\\Users\\user\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\user\\Desktop\\Stuffchik\\Coding-Theory\\Math\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "/home/vitas/.nuget/NuGet/NuGet.Config"
+        "C:\\Users\\user\\AppData\\Roaming\\NuGet\\NuGet.Config"
       ],
       "originalTargetFrameworks": [
         "net8.0"
@@ -38,6 +38,11 @@
         "warnAsError": [
           "NU1605"
         ]
+      },
+      "restoreAuditProperties": {
+        "enableAudit": "true",
+        "auditLevel": "low",
+        "auditMode": "direct"
       }
     },
     "frameworks": {
@@ -59,7 +64,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "/usr/lib/dotnet/sdk/8.0.108/PortableRuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.403/PortableRuntimeIdentifierGraph.json"
       }
     }
   }
