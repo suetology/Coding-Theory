@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "NkIPBmYiCPWw1IT3XegCJU2iEXNKGNFKI2mEUhY/DnbSCO3xXtCfa3FJhECmT8JzndKQy4JK4+FP1SpwlWUmWw==",
+  "dgSpecHash": "eH7E6KFEU7nLSHOLTD77ymUpKIUQHJmjtP6gDkfz1Uuv4iCTt0pLhnxMqXJf4gUUXbcmUuI2I4wC/eKKtxEHhQ==",
   "success": true,
   "projectFilePath": "C:\\Users\\vitas\\Desktop\\Codin\\CodingTheory\\Code\\Code.csproj",
   "expectedPackageFiles": [
@@ -14,6 +14,8 @@
     "C:\\Users\\vitas\\.nuget\\packages\\microsoft.extensions.fileproviders.physical\\8.0.0\\microsoft.extensions.fileproviders.physical.8.0.0.nupkg.sha512",
     "C:\\Users\\vitas\\.nuget\\packages\\microsoft.extensions.filesystemglobbing\\8.0.0\\microsoft.extensions.filesystemglobbing.8.0.0.nupkg.sha512",
     "C:\\Users\\vitas\\.nuget\\packages\\microsoft.extensions.primitives\\8.0.0\\microsoft.extensions.primitives.8.0.0.nupkg.sha512",
+    "C:\\Users\\vitas\\.nuget\\packages\\microsoft.win32.systemevents\\9.0.0\\microsoft.win32.systemevents.9.0.0.nupkg.sha512",
+    "C:\\Users\\vitas\\.nuget\\packages\\system.drawing.common\\9.0.0\\system.drawing.common.9.0.0.nupkg.sha512",
     "C:\\Users\\vitas\\.nuget\\packages\\system.text.encodings.web\\8.0.0\\system.text.encodings.web.8.0.0.nupkg.sha512",
     "C:\\Users\\vitas\\.nuget\\packages\\system.text.json\\8.0.0\\system.text.json.8.0.0.nupkg.sha512"
   ],

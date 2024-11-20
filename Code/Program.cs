@@ -2,6 +2,10 @@
 using Code.Extensions;
 using Code;
 using Math;
+using System.Drawing;
+using Microsoft.VisualBasic;
+using System.Diagnostics;
+using System.Drawing.Imaging;
 
 var configuration = new ConfigurationBuilder()
     .SetBasePath(Directory.GetCurrentDirectory())
@@ -22,7 +26,8 @@ if (!code.GeneratorMatrix.IsStandartFormMatrix())
     throw new ArgumentException("Generator matrix must be in standart form");
 }
 
-var channel = new Channel(errorProbability);
+var random = new Random();
+var channel = new Channel(errorProbability, random);
 var coder = new LinearCoder(code.GeneratorMatrix);
 
 switch (message.Type)
@@ -100,18 +105,18 @@ void EncodeText()
     var distortedNonEncodedMessage = channel.DistortMessage(initialMessage);
     var distortedBits = BitMessageToBits(distortedNonEncodedMessage);
 
-    RemoveAddedBits(distortedBits, bitsAdded);
+    RemoveAddedBits(ref distortedBits, bitsAdded);
 
     var distortedText = BitsToText(distortedBits);
 
-    Console.WriteLine("{0,-40}{1}", "Distorted message without encoding: ", distortedText);
+    Console.WriteLine("{0,-40}{1}", "Distorted message without encoding: ", distortedText);  
 
     var encodedMessage = coder.Encode(initialMessage);
     var distortedEncodedMessage = channel.DistortMessage(encodedMessage);
     var distortedDecodedMessage = coder.Decode(distortedEncodedMessage);
     var distortedDecodedBits = BitMessageToBits(distortedDecodedMessage);
 
-    RemoveAddedBits(distortedDecodedBits, bitsAdded);
+    RemoveAddedBits(ref distortedDecodedBits, bitsAdded);
 
     var distortedDecodedText = BitsToText(distortedDecodedBits);
 
@@ -120,6 +125,35 @@ void EncodeText()
 
 void EncodeImage()
 {
+    OpenFile(message.Content);
+
+    var (width, height, bits) = ReadBitsFromBmpFile(message.Content);
+
+    var bitsAdded = AddMissingBits(bits, code.GeneratorMatrix.Height);
+
+    var initialMessage = new BitMessage(code.GeneratorMatrix.Height, bits);
+
+    var distortedNonEncodedMessage = channel.DistortMessage(initialMessage);
+    var distortedBits = BitMessageToBits(distortedNonEncodedMessage);
+
+    RemoveAddedBits(ref distortedBits, bitsAdded);
+
+    var distortedNonEncodedImageFilepath = "./Images/distorted_non-encoded.bmp";
+
+    WriteBitsToBmpFile(distortedNonEncodedImageFilepath, distortedBits, width, height);
+    OpenFile(distortedNonEncodedImageFilepath);
+
+    var encodedMessage = coder.Encode(initialMessage);
+    var distortedEncodedMessage = channel.DistortMessage(encodedMessage);
+    var distortedDecodedMessage = coder.Decode(distortedEncodedMessage);
+    var distortedDecodedBits = BitMessageToBits(distortedDecodedMessage);
+
+    RemoveAddedBits(ref distortedDecodedBits, bitsAdded);
+
+    var distortedEncodedImageFilepath = "./Images/distorted_encoded.bmp";
+
+    WriteBitsToBmpFile(distortedEncodedImageFilepath, distortedDecodedBits, width, height);
+    OpenFile(distortedEncodedImageFilepath);
 }
 
 static void PrintDistortedMessage(BitMessage distortedMessage, BitMessage encodedMessage)
@@ -153,9 +187,10 @@ static void PrintDistortedMessage(BitMessage distortedMessage, BitMessage encode
     Console.WriteLine();
 }
 
-static List<int> TextToBits(string text)
+static byte[] TextToBits(string text)
 {
-    var bits = new List<int>();
+    var bits = new byte[text.Length * 8];
+    var i = 0;
 
     foreach (var character in text)
     {
@@ -163,41 +198,42 @@ static List<int> TextToBits(string text)
 
         foreach (var bit in binaryCharacter)
         {
-            bits.Add(bit == '1' ? 1 : 0);
+            bits[i] = (byte)(bit == '1' ? 1 : 0);
+            i++;
         }
     }
 
     return bits;
 }
 
-static List<int> BitMessageToBits(BitMessage message)
+static byte[] BitMessageToBits(BitMessage message)
 {
-    var bits = new List<int>();
+    var bits = new byte[message.WordVectors.Count * message.WordVectors[0].Width * 8];
+    var k = 0;
 
     for (var i = 0; i < message.WordVectors.Count; i++)
     {
         for (var j = 0; j < message.WordVectors[i].Width; j++)
         {
-            bits.Add(message.WordVectors[i][0, j].Value);
+            bits[k] = (byte)message.WordVectors[i][0, j].Value;
+            k++;
         }
     }
 
     return bits;
 }
 
-static string BitsToText(List<int> bits)
+static string BitsToText(byte[] bits)
 {
     var text = new List<char>();
 
-    for (var i = 0; i < bits.Count; i += 8)
+    for (var i = 0; i < bits.Length; i += 8)
     {
-        var byteBits = bits.GetRange(i, 8);
-
         var byteValue = 0;
 
-        for (var j = 0; j < 8; j++)
+        for (var j = i; j < i + 8; j++)
         {
-            byteValue += byteBits[j] * MathUtils.Pow(2, 7 - j);
+            byteValue += bits[j] * MathUtils.Pow(2, 7 - (j - i));
         }
 
         text.Add((char)byteValue);
@@ -206,19 +242,111 @@ static string BitsToText(List<int> bits)
     return new string(text.ToArray());
 }
 
-static int AddMissingBits(List<int> bits, int wordLength)
+static int AddMissingBits(byte[] bits, int wordLength)
 {
-    var bitsMissing = wordLength - bits.Count % wordLength;
+    var bitsMissing = wordLength - (bits.Length % wordLength);
 
-    for (var i = 0; i < bitsMissing; i++)
+    if (bitsMissing == wordLength)
     {
-        bits.Add(0);
+        return 0;
     }
+
+    Array.Resize(ref bits, bits.Length + bitsMissing);
 
     return bitsMissing;
 }
 
-static void RemoveAddedBits(List<int> bits, int bitsAdded)
+static void RemoveAddedBits(ref byte[] bits, int bitsAdded)
 {
-    bits.RemoveRange(bits.Count - bitsAdded, bitsAdded);
+    if (bitsAdded <= 0)
+    {
+        return;
+    }
+
+    Array.Resize(ref bits, bits.Length - bitsAdded);
+}
+
+static (int, int, byte[]) ReadBitsFromBmpFile(string filepath)
+{
+    if (!File.Exists(filepath))
+    {
+        throw new FileNotFoundException(filepath);
+    }
+
+    using var bmp = new Bitmap(filepath);
+
+    var width = bmp.Width;
+    var height = bmp.Height;
+
+    var bits = new byte[width * height * 3 * 8]; 
+    var i = 0;
+
+    for (int y = 0; y < height; y++)
+    {
+        for (int x = 0; x < width; x++)
+        {
+            var pixel = bmp.GetPixel(x, y);
+            var rgbColors = new byte[] { pixel.R, pixel.G, pixel.B };
+
+            foreach (var color in rgbColors)
+            {
+                var colorValue = color;
+                for (int j = 7; j >= 0; j--)
+                {
+                    var powerOfTwo = MathUtils.Pow(2, j);
+                    bits[i] = (byte)(colorValue >= powerOfTwo ? 1 : 0);
+                    colorValue -= (byte)(colorValue >= powerOfTwo ? powerOfTwo : 0);
+                    i++;
+                }
+            }
+        }
+    }
+
+    return (width, height, bits);
+}
+
+static void WriteBitsToBmpFile(string filepath, byte[] bits, int width, int height)
+{
+    var bmp = new Bitmap(width, height);
+    var i = 0;
+
+    for (int y = 0; y < height; y++)
+    {
+        for (int x = 0; x < width; x++)
+        {
+            byte r = 0, g = 0, b = 0;
+
+            for (int j = 0; j < 8; j++)
+            {
+                var powerOfTwo = MathUtils.Pow(2, 7 - j);
+                r += (byte)(bits[i] == 1 ? powerOfTwo : 0);
+                i++;
+            }
+
+            for (int j = 0; j < 8; j++)
+            {
+                var powerOfTwo = MathUtils.Pow(2, 7 - j);
+                g += (byte)(bits[i] == 1 ? powerOfTwo : 0);
+                i++;
+            }
+
+            for (int j = 0; j < 8; j++)
+            {
+                var powerOfTwo = MathUtils.Pow(2, 7 - j);
+                b += (byte)(bits[i] == 1 ? powerOfTwo : 0);
+                i++;
+            }
+
+            bmp.SetPixel(x, y, Color.FromArgb(r, g, b));
+        }
+    }
+
+    bmp.Save(filepath, ImageFormat.Bmp);
+}
+
+static void OpenFile(string filepath)
+{
+    var absolutePath = Path.GetFullPath(filepath);
+
+    Process.Start("explorer.exe", absolutePath);
 }

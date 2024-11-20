@@ -4,7 +4,9 @@ public class Channel
 {
     private readonly float _errorProbability;
 
-    public Channel(float errorProbability)
+    private readonly Random _random;
+
+    public Channel(float errorProbability, Random random)
     {
         if (errorProbability < 0 || errorProbability > 1)
         {
@@ -12,6 +14,7 @@ public class Channel
         }
 
         _errorProbability = errorProbability;
+        _random = random;
     }
 
     public BitMessage DistortMessage(BitMessage message)

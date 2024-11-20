@@ -36,16 +36,16 @@ public class BitMessage
         }
     }
 
-    public BitMessage(int wordLength, IList<int> bits)
+    public BitMessage(int wordLength, byte[] bits)
     {
-        if (bits.Count % wordLength != 0)
+        if (bits.Length % wordLength != 0)
         {
             throw new ArgumentException("Invalid length of a message");
         }
 
         WordVectors = new List<Matrix<Bit>>();
 
-        var wordCount = bits.Count / wordLength;
+        var wordCount = bits.Length / wordLength;
 
         for (var i = 0; i < wordCount; i++)
         {
