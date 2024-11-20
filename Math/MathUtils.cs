@@ -1,5 +1,8 @@
 namespace Math;
 
+/// <summary>
+/// Pagalbinė klasė, apibrėžianti pagalbinius matematinius metodus.
+/// </summary>
 public static class MathUtils
 {
     public static int Pow(int number, int power)

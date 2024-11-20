@@ -2,6 +2,10 @@
 
 using System.Text;
 
+/// <summary>
+/// Klasė, skirta darbui su matricomis.
+/// </summary>
+/// <typeparam name="T"></typeparam>
 public class Matrix<T> : IEquatable<Matrix<T>>
     where T : INumeric<T>
 {
@@ -11,6 +15,11 @@ public class Matrix<T> : IEquatable<Matrix<T>>
     
     private readonly T[,] _data;
 
+    /// <summary>
+    /// Sukuria tuščia Matrix objektą.
+    /// </summary>
+    /// <param name="height">Matricos aukštis</param>
+    /// <param name="width">Matricos plotis</param>
     public Matrix(int height, int width)
     {
         Height = height;
@@ -19,6 +28,10 @@ public class Matrix<T> : IEquatable<Matrix<T>>
         _data = new T[Height, Width];
     }
 
+    /// <summary>
+    /// Sukuria matricos kopija.
+    /// </summary>
+    /// <param name="other">Originali matrica</param>
     public Matrix(Matrix<T> other)
     {
         Height = other.Height;
@@ -35,6 +48,10 @@ public class Matrix<T> : IEquatable<Matrix<T>>
         }
     }
 
+    /// <summary>
+    /// Sukuria naują transponuotą matricą.
+    /// </summary>
+    /// <returns>Transponuota matrica</returns>
     public Matrix<T> Transpose()
     {
         var transpose = new Matrix<T>(Width, Height);
@@ -50,6 +67,14 @@ public class Matrix<T> : IEquatable<Matrix<T>>
         return transpose;
     }
 
+    /// <summary>
+    /// Pagalbinis metodas, leidžiantis ištraukti tam tikrą dalį iš matricos.
+    /// </summary>
+    /// <param name="rowStart">Pirmos eilutės pozicija</param>
+    /// <param name="columnStart">Pirmo stulpelio pozicija</param>
+    /// <param name="height">Eilučių skaičius</param>
+    /// <param name="width">Stulpelių skaičius</param>
+    /// <returns>Matricos dalis</returns>
     public Matrix<T> ExtractSubmatrix(int rowStart, int columnStart, int height, int width)
     {
         var extracted = new Matrix<T>(height, width);
@@ -65,6 +90,10 @@ public class Matrix<T> : IEquatable<Matrix<T>>
         return extracted;
     }
 
+    /// <summary>
+    /// Pagalbinis metodas, leidžiantis patikrinti, ar matrica yra standartinio pavidalo.
+    /// </summary>
+    /// <returns>true, kai matrica yra standartinio pavidalo, kitaip - false</returns>
     public bool IsStandartFormMatrix()
     {
         if (Height > Width)
@@ -77,6 +106,10 @@ public class Matrix<T> : IEquatable<Matrix<T>>
         return leftPartMatrix.IsIdentityMatrix();
     }
 
+    /// <summary>
+    /// Pagalbinis metodas, leidžiantis patikrinti, ar matrica yra vienetinė.
+    /// </summary>
+    /// <returns>true, kai matrica yra vienetinė, kitaip - false</returns>
     public bool IsIdentityMatrix()
     {
         if (Height != Width)
@@ -108,6 +141,13 @@ public class Matrix<T> : IEquatable<Matrix<T>>
         return true;
     }
 
+
+    /// <summary>
+    /// Pagalbinis metodas, apjungiantis dviejų matricų eilutės.
+    /// </summary>
+    /// <param name="m1">Naujos matricos kairioji dalis</param>
+    /// <param name="m2">Naujos matricos dešinioji dalis</param>
+    /// <returns>Matrica su apjungtomis eilutėmis</returns>
     public static Matrix<T> CombineRows(Matrix<T> m1, Matrix<T> m2)
     {
         if (m1.Height != m2.Height)
@@ -136,6 +176,11 @@ public class Matrix<T> : IEquatable<Matrix<T>>
         return combined;
     }
 
+    /// <summary>
+    /// Pagalbinis metodas, sukuriantis vienetinę matricą.
+    /// </summary>
+    /// <param name="size">Vienetinės matricos išmatavimai</param>
+    /// <returns>Vienetinė matrica</returns>
     public static Matrix<T> CreateIdentityMatrix(int size)
     {
         var identityMatrix = new Matrix<T>(size, size);
@@ -148,6 +193,12 @@ public class Matrix<T> : IEquatable<Matrix<T>>
         return identityMatrix;
     }
 
+    /// <summary>
+    /// Pagalbinis operatorius, leidžiantis lengviau pasiekti matricos elementus.
+    /// </summary>
+    /// <param name="row">Elemento eilutės pozicija</param>
+    /// <param name="column">Elemento stulpelio pozicija</param>
+    /// <returns></returns>
     public T this[int row, int column]
     {
         get
@@ -160,6 +211,12 @@ public class Matrix<T> : IEquatable<Matrix<T>>
         }
     }
 
+    /// <summary>
+    /// Operatorius, leidžiantis sudėti matricas.
+    /// </summary>
+    /// <param name="m1">Pirmas operandas</param>
+    /// <param name="m2">Antras operandas</param>
+    /// <returns>Sumos rezultato matrica</returns>
     public static Matrix<T> operator +(Matrix<T> m1, Matrix<T> m2)
     {
         if (m1.Height != m2.Height || m1.Width != m2.Width)
@@ -180,6 +237,13 @@ public class Matrix<T> : IEquatable<Matrix<T>>
         return result;
     }
 
+    /// <summary>
+    /// Operatorius, leidžiantis sudauginti matricas.
+    /// </summary>
+    /// <param name="m1">Pirmas operandas</param>
+    /// <param name="m2">Antras operandas</param>
+    /// <returns>Daugybos rezultato matrica</returns>
+    /// <exception cref="ArgumentException"></exception>
     public static Matrix<T> operator *(Matrix<T> m1, Matrix<T> m2)
     {
         if (m1.Width != m2.Height)
@@ -203,6 +267,10 @@ public class Matrix<T> : IEquatable<Matrix<T>>
         return result;
     }
 
+    /// <summary>
+    /// Pagalbinis metodas, leidžiantis konvertuoti matricą į eilutę.
+    /// </summary>
+    /// <returns>Eilutė, reprezentuojanti matricą</returns>
     public override string ToString()
     {
         var builder = new StringBuilder();
@@ -223,6 +291,11 @@ public class Matrix<T> : IEquatable<Matrix<T>>
         return builder.ToString();
     }
 
+    /// <summary>
+    /// Pagalbinis metodas, reikalingas darbui su Dictionary klase.
+    /// </summary>
+    /// <param name="other">Palyginimo objektas</param>
+    /// <returns>true, kai objektai lygūs, kitaip - false</returns>
     public bool Equals(Matrix<T>? other)
     {
         if (other == null)
@@ -249,6 +322,10 @@ public class Matrix<T> : IEquatable<Matrix<T>>
         return true;
     }
 
+    /// <summary>
+    /// Pagalbinis metodas, reikalingas darbui su Dictionary klase.
+    /// </summary>
+    /// <returns>Matrix objekto hash kodas</returns>
     public override int GetHashCode()
     {
         int hash = 17;

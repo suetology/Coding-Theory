@@ -1,5 +1,8 @@
 namespace Math;
 
+/// <summary>
+/// Pagalbinis interfeisas, kurį turi realizuoti tipai, norint naudoti juos kaip matricos elementus. 
+/// </summary>
 public interface INumeric<T> : IAddable<T>, ISubtractable<T>, IMultipliable<T>
     where T : INumeric<T>
 {

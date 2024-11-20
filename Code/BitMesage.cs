@@ -4,10 +4,17 @@ using Math;
 
 namespace Code;
 
+/// <summary>
+/// Klasė, leidžianti suvienodinti darba su skirtingomis bitų kolekcijų reprezentacijomis.
+/// </summary>
 public class BitMessage
 {
     public IList<Matrix<Bit>> WordVectors { get; }
 
+    /// <summary>
+    /// Sukuria BitMessage objektą iš vektorių sąrašo.
+    /// </summary>
+    /// <param name="wordVectors">Bit vektorių sąrašas</param>
     public BitMessage(IList<Matrix<Bit>> wordVectors)
     {
         WordVectors = new List<Matrix<Bit>>(wordVectors.Count);
@@ -18,6 +25,11 @@ public class BitMessage
         }
     }
 
+    /// <summary>
+    /// Sukuria BitMessage iš eilutės, sudarytos iš nulių ir vienetų.
+    /// </summary>
+    /// <param name="wordLength">Kodo žodžio ilgis</param>
+    /// <param name="message">Eilutė, sudaryta iš nulių ir vienetų</param>
     public BitMessage(int wordLength, string message)
     {
         if (message.Length % wordLength != 0)
@@ -36,6 +48,12 @@ public class BitMessage
         }
     }
 
+    /// <summary>
+    /// Sukuria BitMessage iš bitų masyvo.
+    /// </summary>
+    /// <param name="wordLength">Kodo žodžio ilgis</param>
+    /// <param name="bits">Bitų masyvas</param>
+    /// <exception cref="ArgumentException"></exception>
     public BitMessage(int wordLength, byte[] bits)
     {
         if (bits.Length % wordLength != 0)
@@ -58,6 +76,10 @@ public class BitMessage
         }
     }
 
+    /// <summary>
+    /// Pagalbinis metodas, BitMessage objektą į eilutę.
+    /// </summary>
+    /// <returns>Eilutė, sudarytą iš BitMessage objekto elementų</returns>
     public override string ToString()
     {
         var builder = new StringBuilder();

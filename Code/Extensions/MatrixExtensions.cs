@@ -2,8 +2,17 @@ using Math;
 
 namespace Code.Extensions;
 
+/// <summary>
+/// Klasė, skirta praplėsti Matrix<T> klasę kodavimo teorijai būdingais metodais.
+/// </summary>
 public static class MatrixExtensions
 {
+    /// <summary>
+    /// Sukuria standartinio pavidalo generuojančią matricą.
+    /// </summary>
+    /// <param name="height">Matricos aukštis</param>
+    /// <param name="width">Matricos plotis</param>
+    /// <returns>Matrica iš Bit elementų</returns>
     public static Matrix<Bit> CreateGeneratorMatrix(int height, int width)
     {
         if (width > height)
@@ -35,6 +44,11 @@ public static class MatrixExtensions
         return generatorMatrix;
     }
 
+    /// <summary>
+    /// Sukuria kodo kontrolinę matricą.
+    /// </summary>
+    /// <param name="generatorMatrix">Standartinio pavidalo generuojančia matrica</param>
+    /// <returns>Kontrolinė matrica iš Bit elementų</returns>
     public static Matrix<Bit> CreateParityCheckMatrix(this Matrix<Bit> generatorMatrix)
     {
         if (generatorMatrix.Height > generatorMatrix.Width) 
