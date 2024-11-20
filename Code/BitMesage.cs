@@ -10,7 +10,12 @@ public class BitMessage
 
     public BitMessage(IList<Matrix<Bit>> wordVectors)
     {
-        WordVectors = wordVectors;
+        WordVectors = new List<Matrix<Bit>>(wordVectors.Count);
+
+        for (var i = 0; i < wordVectors.Count; i++)
+        {
+            WordVectors.Add(new Matrix<Bit>(wordVectors[i]));
+        }
     }
 
     public BitMessage(int wordLength, string message)
@@ -31,13 +36,39 @@ public class BitMessage
         }
     }
 
+    public BitMessage(int wordLength, IList<int> bits)
+    {
+        if (bits.Count % wordLength != 0)
+        {
+            throw new ArgumentException("Invalid length of a message");
+        }
+
+        WordVectors = new List<Matrix<Bit>>();
+
+        var wordCount = bits.Count / wordLength;
+
+        for (var i = 0; i < wordCount; i++)
+        {
+            WordVectors.Add(new Matrix<Bit>(1, wordLength));
+
+            for (var j = 0; j < wordLength; j++)
+            {
+                WordVectors[i][0, j] = new Bit(bits[i * wordLength + j]);
+            }
+        }
+    }
+
     public override string ToString()
     {
         var builder = new StringBuilder();
 
         foreach (var word in WordVectors)
         {
-            builder.Append(word + " ");
+            for (var i = 0; i < word.Width; i++)
+            {
+                builder.Append(word[0, i]);
+            }
+            builder.Append(' ');
         }
 
         return builder.ToString();

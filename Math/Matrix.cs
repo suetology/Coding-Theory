@@ -2,7 +2,7 @@
 
 using System.Text;
 
-public class Matrix<T> 
+public class Matrix<T> : IEquatable<Matrix<T>>
     where T : INumeric<T>
 {
     public int Height { get; }
@@ -50,7 +50,7 @@ public class Matrix<T>
         return transpose;
     }
 
-    public Matrix<T> Extract(int rowStart, int columnStart, int height, int width)
+    public Matrix<T> ExtractSubmatrix(int rowStart, int columnStart, int height, int width)
     {
         var extracted = new Matrix<T>(height, width);
 
@@ -65,12 +65,47 @@ public class Matrix<T>
         return extracted;
     }
 
-    public void SwapRows(int r1, int r2)
+    public bool IsStandartFormMatrix()
     {
-        for (var i = 0; i < Width; i++)
+        if (Height > Width)
         {
-            (this[r1, i], this[r2, i]) = (this[r2, i], this[r1, i]);
+            return false;
         }
+
+        var leftPartMatrix = ExtractSubmatrix(0, 0, Height, Height);
+
+        return leftPartMatrix.IsIdentityMatrix();
+    }
+
+    public bool IsIdentityMatrix()
+    {
+        if (Height != Width)
+        {
+            return false;
+        }
+
+        for (var y = 0; y < Height; y++)
+        {
+            for (var x = 0; x < Width; x++)
+            {
+                if (y == x)
+                {
+                    if (this[y, x] != T.One())
+                    {
+                        return false;
+                    }
+                }
+                else
+                {
+                    if (this[y, x] != T.Zero())
+                    {
+                        return false;
+                    }
+                }
+            }
+        }
+
+        return true;
     }
 
     public static Matrix<T> CombineRows(Matrix<T> m1, Matrix<T> m2)
@@ -186,5 +221,49 @@ public class Matrix<T>
         }
 
         return builder.ToString();
+    }
+
+    public bool Equals(Matrix<T>? other)
+    {
+        if (other == null)
+        {
+            return false;
+        }
+
+        if (Height != other.Height || Width != other.Width)
+        {
+            return false;
+        }
+
+        for (var y = 0; y < Height; y++)
+        {
+            for (var x = 0; x < Width; x++)
+            {
+                if (this[y, x] != other[y, x])
+                {
+                    return false;
+                }
+            }
+        }
+
+        return true;
+    }
+
+    public override int GetHashCode()
+    {
+        int hash = 17;
+
+        hash = hash * 23 + Height.GetHashCode();
+        hash = hash * 23 + Width.GetHashCode();
+
+        for (var y = 0; y < Height; y++)
+        {
+            for (var x = 0; x < Width; x++)
+            {
+                hash = hash * 23 + this[y, x].GetHashCode();
+            }
+        }
+
+        return hash;
     }
 }

@@ -5,7 +5,7 @@ using Math;
 
 public struct Bit : INumeric<Bit>
 {
-    public int Value { get; }
+    public int Value { get; private set; }
 
     public Bit(int value)
     {
@@ -15,6 +15,11 @@ public struct Bit : INumeric<Bit>
         }
 
         Value = value;
+    }
+
+    public Bit Switch()
+    {
+        return Value == 0 ? new Bit(1) : new Bit(0);
     }
 
     public static Bit operator +(Bit left, Bit right)

@@ -6,26 +6,21 @@ using Microsoft.Extensions.Configuration;
 
 public static class ConfigurationExtensions
 {
-    public static string GetMessage(this IConfiguration configuration)
-    {
-        var message = configuration.GetSection("message").Get<string>();
-
-        if (message == null)
-        {
-            throw new Exception("Message is not specified in configuration");
-        }
-
-        if (!message.IsBitString())
-        {
-            throw new Exception("Message is not a string of bits");
-        }
-
-        return message;
-    }
-
     public static float GetErrorProbability(this IConfiguration configuration)
     {
         return configuration.GetSection("p").Get<float>();
+    }
+
+    public static MessageConfiguration GetMessageConfiguration(this IConfiguration configuration)
+    {
+        var messageSection = configuration.GetSection("message");
+
+        var message = new MessageConfiguration();
+
+        message.Type = messageSection.GetSection("type").Get<string>();
+        message.Content = messageSection.GetSection("content").Get<string>();
+
+        return message;
     }
 
     public static CodeConfiguration GetCodeConfiguration(this IConfiguration configuration)
